@@ -101,11 +101,17 @@ def the_main_loop(filepath):
 @click.option('--config', default='bravo.json', help='Use a specific configuration file.')
 @click.option('--sample', default=0, help='Process these many files and stop.')
 @click.option('--search', default='', help='Search for these classes.')
+@click.option('--write/--no-write', default=False, help='writes a sample config file at --config')
 @click.argument('pattern', default='*.*')
 @click.argument('target_directory', default='.')
 @click.command()
-def run(target_directory, pattern, sample, config, skip, replace, search):
+def run(target_directory, pattern, sample, config, skip, replace, search, write):
     global settings
+    if write:
+        with open(config, 'w') as conffile:
+            json.dump([settings], conffile)
+        return None
+
     for i, filepath in enumerate(file_walker(target_directory, pattern)):
         if sample > 0 and i == sample:
             break
@@ -115,7 +121,7 @@ def run(target_directory, pattern, sample, config, skip, replace, search):
             settings['skip'] = skip
             the_main_loop(filepath)
         else:
-            with open(config) as conffile:
+            with open(config, 'r') as conffile:
                 conf = json.load(conffile)
 
             for setting in conf:
