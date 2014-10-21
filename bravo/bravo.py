@@ -38,6 +38,11 @@ def replace_class_name_in_string(class_names, find_class, replace_class):
                   " {class_name} ".format(class_name=replace_class),
                   class_names).strip()
 
+def replace_classes_in_template(template, find_class, replace_class):
+    return re.sub(r"""(\b){class_names}(\b)(?![\w-])""".format(class_names=find_class),
+                  "{class_names}".format(class_names=replace_class), template)
+
+
 def normalize_spaces(s):
     while '  ' in s:
         s = s.replace('  ', ' ')
@@ -72,6 +77,7 @@ def print_output(match, replace_with):
                                                 class_names=match.group('class_names'),
                                                 replaced_with='=> {}'.format(replace_with))
 
+
 @click.option('--replace', default='', help='Replace found classes with these.')
 @click.option('--skip', default='', help='Skip find-replace if these classes are found.')
 @click.option('--config', default='', help='Use a specific configuration file.')
@@ -99,7 +105,8 @@ def run(target_directory, pattern, sample, config, skip, replace, search_classes
                     if classes_found and replace:
                         replace_with = get_replacement_classes(match.group('class_names'))
                         replaced = True
-                        template = replace_classes(template, match, replace_with)
+                        # template = replace_classes(template, match, replace_with)
+                        template = replace_classes_in_template(template, match.group('class_names'), replace_with)
                         print_output(match, replace_with)
                 if replaced == True:
                     with open(filepath, 'w+') as template_file:
