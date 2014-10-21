@@ -1,0 +1,4 @@
+[
+    {"search": "g", "replace": "columns", "skip": ""},
+    {"search": "columns", "replace": "bandana", "skip": ""}
+]

@@ -77,40 +77,51 @@ def print_output(match, replace_with):
                                                 class_names=match.group('class_names'),
                                                 replaced_with='=> {}'.format(replace_with))
 
+def the_main_loop(filepath):
+    with open(filepath, 'r+') as template_file:
+        template = template_file.read()
+        replaced = False
+        for j, match in enumerate(get_class_names_compiled().finditer(template)):
+            classes_found = search_classes_in_string(match.group('class_names'))
+            classes_search = class_names_to_list(settings['search'])
+            classes_replace = class_names_to_list(settings['replace'])
+            if classes_found and settings['replace']:
+                replace_with = get_replacement_classes(match.group('class_names'))
+                replaced = True
+                # template = replace_classes(template, match, replace_with)
+                template = replace_classes_in_template(template, match.group('class_names'), replace_with)
+                print_output(match, replace_with)
+        if replaced == True:
+            with open(filepath, 'w+') as template_file:
+                template_file.write(template)
+
 
 @click.option('--replace', default='', help='Replace found classes with these.')
 @click.option('--skip', default='', help='Skip find-replace if these classes are found.')
-@click.option('--config', default='', help='Use a specific configuration file.')
+@click.option('--config', default='bravo.json', help='Use a specific configuration file.')
 @click.option('--sample', default=0, help='Process these many files and stop.')
-@click.argument('search_classes')
+@click.option('--search', default='', help='Search for these classes.')
 @click.argument('pattern', default='*.*')
 @click.argument('target_directory', default='.')
 @click.command()
-def run(target_directory, pattern, sample, config, skip, replace, search_classes):
+def run(target_directory, pattern, sample, config, skip, replace, search):
     global settings
     for i, filepath in enumerate(file_walker(target_directory, pattern)):
         if sample > 0 and i == sample:
             break
-        if search_classes:
-            settings['search'] = search_classes
+        if search:
+            settings['search'] = search
             settings['replace'] = replace
             settings['skip'] = skip
-            with open(filepath, 'r+') as template_file:
-                template = template_file.read()
-                replaced = False
-                for j, match in enumerate(get_class_names_compiled().finditer(template)):
-                    classes_found = search_classes_in_string(match.group('class_names'))
-                    classes_search = class_names_to_list(settings['search'])
-                    classes_replace = class_names_to_list(settings['replace'])
-                    if classes_found and replace:
-                        replace_with = get_replacement_classes(match.group('class_names'))
-                        replaced = True
-                        # template = replace_classes(template, match, replace_with)
-                        template = replace_classes_in_template(template, match.group('class_names'), replace_with)
-                        print_output(match, replace_with)
-                if replaced == True:
-                    with open(filepath, 'w+') as template_file:
-                        template_file.write(template)
+            the_main_loop(filepath)
+        else:
+            with open(config) as conffile:
+                conf = json.load(conffile)
+
+            for setting in conf:
+                settings = setting
+                the_main_loop(filepath)
+
         print i, filepath
 
 if __name__ == '__main__':
