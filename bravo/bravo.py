@@ -66,6 +66,12 @@ def replace_classes(template, match, replace_with):
     return str(prefix) + str(replace_with) + str(postfix)
 
 
+def print_output(match, replace_with):
+    print "\t{start}:{end} \t{class_names} {replaced_with}".format(start=match.start('class_names'),
+                                                end=match.end('class_names'),
+                                                class_names=match.group('class_names'),
+                                                replaced_with='=> {}'.format(replace_with))
+
 @click.option('--replace', default='', help='Replace found classes with these.')
 @click.option('--skip', default='', help='Skip find-replace if these classes are found.')
 @click.option('--config', default='', help='Use a specific configuration file.')
@@ -94,11 +100,7 @@ def run(target_directory, pattern, sample, config, skip, replace, search_classes
                         replace_with = get_replacement_classes(match.group('class_names'))
                         replaced = True
                         template = replace_classes(template, match, replace_with)
-                        print "\t{start}:{end} \t{class_names} {replaced_with}".format(start=match.start('class_names'),
-                                                                    end=match.end('class_names'),
-                                                                    class_names=match.group('class_names'),
-                                                                    replaced_with='=> {}'.format(replace_with))
-
+                        print_output(match, replace_with)
                 if replaced == True:
                     with open(filepath, 'w+') as template_file:
                         template_file.write(template)
