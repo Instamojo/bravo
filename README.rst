@@ -18,7 +18,8 @@ changes where the rules for each transformation are documented.
 usage
 -----
 
-Assuming you have the folder layout:
+Assuming you have the folder layout::
+
   - project
     - design
       - templates
