@@ -1,2 +1,6 @@
 .idea
 *.pyc
+build
+click-3.3-py2.7.egg
+dist
+instamojo_bravo.egg-info
