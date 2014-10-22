@@ -132,8 +132,8 @@ def run(target_directory, pattern, sample, config, skip, replace, search, create
                     conf = json.load(conffile)
             except:
                 print "Default config file not found: config.json"
-                ask = raw_input("Would you like to create one? (yes/[no]):")
-                if ask.lower() == 'yes':
+                ask = raw_input("Would you like to create one? (y/[n]):")
+                if ask.lower() == 'y':
                     write_config_file(config)
                     print "Done, now you can edit {} and run this program again.".format(config)
                 return
