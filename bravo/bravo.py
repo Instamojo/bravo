@@ -117,6 +117,7 @@ def run(target_directory, pattern, sample, config, skip, replace, search, create
     global settings
     if create_config:
         write_config_file(config)
+        return None
 
     for i, filepath in enumerate(file_walker(target_directory, pattern)):
         if sample > 0 and i == sample:
