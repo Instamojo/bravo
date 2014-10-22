@@ -4,7 +4,7 @@ bravo
 A tool to work with html element classes - for porting between/refactoring design frameworks.
 
 Bravo is your friend if you want to transform something like
-`<div class="g one-whole">` to `<div class="small-12 columns">`
+``<div class="g one-whole">`` to ``<div class="small-12 columns">``
 
 Bravo is more flexible than that, and allows you to perform
 quick search and replace only on "class" attributes inside any
@@ -26,9 +26,9 @@ Assuming you have the folder layout::
         - *.html
 
 Follow these steps:
- - `$ cd project/design`
- - `$ bravo --create-config`
- - Edit `bravo.json` file just created in the working directory.
+ - ``$ cd project/design``
+ - ``$ bravo --create-config``
+ - Edit ``bravo.json`` file just created in the working directory.
 
 
 editing config file
@@ -67,20 +67,20 @@ move on.
 invoking bravo
 --------------
 
-`$ bravo [/path/to/templates] *.html --config=bravo.json`
+``$ bravo [/path/to/templates] *.html --config=bravo.json``
 
 
 installation
 ------------
 
 Clone this repository somewhere, is you are using virtualenv,
-create one using `mkvirtualenv bravo`.
+create one using ``mkvirtualenv bravo``.
 
-Now run `python setup.py install`
+Now run ``python setup.py install``
 
-You should be able to invoke `bravo` from your command line.
+You should be able to invoke ``bravo`` from your command line.
 
 If you encounter a permission error (if you are not using virtualenv)
-then you may want to add `sudo` before the setup command.
+then you may want to add ``sudo`` before the setup command.
 
 
