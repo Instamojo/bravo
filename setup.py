@@ -22,6 +22,7 @@ with open("README.rst", "rb") as f:
 setup(
     name = "instamojo-bravo",
     packages = ["bravo"],
+    install_requires = ['click'],
     entry_points = {
         "console_scripts": ['bravo = bravo.bravo:run']
         },
