@@ -1,4 +1,7 @@
-"""Bravo is a tool that works with HTML styles."""
+"""bravo.bravo: a tool that works with HTML styles."""
+
+__version__ = "0.1.0"
+
 import re
 import click
 import json
@@ -95,22 +98,25 @@ def the_main_loop(filepath):
             with open(filepath, 'w+') as template_file:
                 template_file.write(template)
 
+def write_config_file(config):
+        with open(config, 'w') as conffile:
+            json.dump([settings], conffile)
+        return None
+
 
 @click.option('--replace', default='', help='Replace found classes with these.')
 @click.option('--skip', default='', help='Skip find-replace if these classes are found.')
 @click.option('--config', default='bravo.json', help='Use a specific configuration file.')
 @click.option('--sample', default=0, help='Process these many files and stop.')
 @click.option('--search', default='', help='Search for these classes.')
-@click.option('--write/--no-write', default=False, help='writes a sample config file at --config')
+@click.option('--create-config/--no-create-config', default=False, help='writes a sample config file at --config')
 @click.argument('pattern', default='*.*')
 @click.argument('target_directory', default='.')
 @click.command()
-def run(target_directory, pattern, sample, config, skip, replace, search, write):
+def run(target_directory, pattern, sample, config, skip, replace, search, create_config):
     global settings
-    if write:
-        with open(config, 'w') as conffile:
-            json.dump([settings], conffile)
-        return None
+    if create_config:
+        write_config_file(config)
 
     for i, filepath in enumerate(file_walker(target_directory, pattern)):
         if sample > 0 and i == sample:
@@ -121,8 +127,16 @@ def run(target_directory, pattern, sample, config, skip, replace, search, write)
             settings['skip'] = skip
             the_main_loop(filepath)
         else:
-            with open(config, 'r') as conffile:
-                conf = json.load(conffile)
+            try:
+                with open(config, 'r') as conffile:
+                    conf = json.load(conffile)
+            except:
+                print "Default config file not found: config.json"
+                ask = raw_input("Would you like to create one? (yes/[no]):")
+                if ask.lower() == 'yes':
+                    write_config_file(config)
+                    print "Done, now you can edit {} and run this program again.".format(config)
+                return
 
             for setting in conf:
                 settings = setting
