@@ -63,6 +63,11 @@ You can specify one or more class-names here. If all the classes
 specified here are found, we skip the search-replace task and
 move on.
 
+invoking bravo
+--------------
+
+`$ bravo [/path/to/templates] *.html --config=bravo.json`
+
 
 installation
 ------------
